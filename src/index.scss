@@ -5,7 +5,7 @@
   box-sizing: border-box;
   color-scheme: light dark;
   background-color: #e6e6e6;
-
+  color: #000;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -28,14 +28,19 @@ html,
 body {
   height: 100%;
 }
-
+.bodyModalOpen {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
 a {
   font-weight: 500;
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 a:hover {
-  color: #535bf2;
+  color: inherit;
 }
 
 body {
@@ -46,18 +51,6 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
-//button {
-//  border-radius: 8px;
-//  border: none;
-//  padding: 0.6em 1.2em;
-//  font-size: 1em;
-//  font-weight: 500;
-//  font-family: inherit;
-//  background-color: #1a1a1a;
-//  cursor: pointer;
-//  transition: border-color 0.25s;
-//}
 
 .wrapper {
   display: flex;

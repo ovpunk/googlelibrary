@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./header.module.scss";
 import { useDispatch } from "react-redux";
 
@@ -8,13 +8,15 @@ import { setBookList } from "../../redux/slices/booksSlice";
 
 export const Header = () => {
   const [value, setValue] = useState("");
+
   const dispatch = useDispatch();
-  const { isError, isLoading, refetch } = useQuery({
+  const { data, isError, isSuccess, refetch } = useQuery({
     queryKey: ["getBooks"],
     queryFn: async () => {
       const res = await booksFetch(value);
       if (res.ok) {
         const responce = await res.json();
+        console.log(responce);
         setValue("");
         const books = responce.items;
         dispatch(setBookList(books));
@@ -26,9 +28,19 @@ export const Header = () => {
     },
     enabled: false,
   });
+  useEffect(() => {
+    if (isSuccess) {
+      const headerHeight = document.querySelector("header").offsetHeight;
+      window.scrollBy({
+        top: headerHeight,
+        left: 0,
+        behavior: "smooth",
+      });
+      console.log("scroll");
+    }
+  }, [isSuccess, data]);
 
   if (isError) return <p>Error</p>;
-  if (isLoading) return <p>zagruzka</p>;
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
