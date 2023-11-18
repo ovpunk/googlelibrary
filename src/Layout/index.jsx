@@ -1,5 +1,3 @@
-//import { Footer } from "./Footer";
-
 import { Books } from "../components/Books";
 import { Header } from "./Header";
 
@@ -12,7 +10,6 @@ export const Layout = () => {
           <Books />
         </div>
       </main>
-      {/*<Footer />*/}
     </div>
   );
 };
