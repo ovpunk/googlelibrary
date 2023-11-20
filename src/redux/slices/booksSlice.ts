@@ -1,11 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { initialData } from "../initialState/";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { initialData } from "../initialState";
+import { TBook } from "../../types";
 
 export const booksSlice = createSlice({
   name: "bookList",
   initialState: initialData,
   reducers: {
-    setBookList: (state, action) => {
+    setBookList: (state, action: PayloadAction<TBook[]>) => {
       state.books = action.payload;
     },
   },

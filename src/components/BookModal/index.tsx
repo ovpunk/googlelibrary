@@ -1,16 +1,24 @@
-import { useRef } from "react";
-import { CSSTransition } from "react-transition-group";
+import { FC, ReactNode, useRef } from "react";
 import styles from "./bookmodal.module.scss";
 import classNames from "classnames";
-export const BookModal = ({
+import { CSSTransition } from "react-transition-group";
+
+interface IModalProps {
+  active: boolean;
+  setActive: React.Dispatch<React.SetStateAction<boolean>>;
+  openContent: boolean;
+  setOpenContent: React.Dispatch<React.SetStateAction<boolean>>;
+  children: ReactNode;
+}
+
+export const BookModal: FC<IModalProps> = ({
   active,
   setActive,
   openContent,
   setOpenContent,
   children,
 }) => {
-  const nodeRef = useRef();
-
+  const nodeRef = useRef(null);
   const handleCloseModal = () => {
     setOpenContent(false);
     setActive(false);

@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import styles from "./header.module.scss";
-import { useDispatch } from "react-redux";
 import { booksFetch } from "../../api/api";
 import { useQuery } from "@tanstack/react-query";
 import { setBookList } from "../../redux/slices/booksSlice";
-
-export const Header = () => {
+import { useAppDispatch } from "../../hooks";
+import { TBook } from "../../types";
+export const Header: FC = () => {
   const [value, setValue] = useState("");
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { data, error, refetch } = useQuery({
     queryKey: ["getBooks"],
     queryFn: async () => {
@@ -17,7 +17,22 @@ export const Header = () => {
         const responce = await res.json();
         setValue("");
         const books = responce.items;
-        dispatch(setBookList(books));
+        console.log(books);
+        const booksForRedux: TBook[] = [];
+        books.forEach((el: any) => {
+          const book: TBook = {
+            id: el.id,
+            title: el.volumeInfo.title,
+            img: el.volumeInfo.imageLinks?.thumbnail,
+            authors: el.volumeInfo.authors,
+            publishedDate: el.volumeInfo.publishedDate,
+            publisher: el.volumeInfo.publisher,
+            previewLink: el.volumeInfo.previewLink,
+            description: el.volumeInfo.description,
+          };
+          booksForRedux.push(book);
+        });
+        dispatch(setBookList(booksForRedux));
 
         return books;
       } else {
@@ -27,7 +42,7 @@ export const Header = () => {
     enabled: false,
   });
   useEffect(() => {
-    const headerHeight = document.querySelector("header").offsetHeight;
+    const headerHeight = document.querySelector("header")!.offsetHeight;
     window.scrollBy({
       top: headerHeight,
       left: 0,
@@ -35,7 +50,7 @@ export const Header = () => {
     });
   }, [data, error]);
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     refetch();
   };
@@ -56,7 +71,7 @@ export const Header = () => {
             onChange={(e) => setValue(e.target.value)}
             onKeyUp={(e) => {
               if (e.key === "Enter") {
-                handleFormSubmit(e);
+                handleFormSubmit(e as any);
               }
             }}
           />

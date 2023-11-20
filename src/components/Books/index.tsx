@@ -1,8 +1,10 @@
-import { useSelector } from "react-redux";
 import { Book } from "../Book/index";
 import styles from "./books.module.scss";
-export const Books = () => {
-  const state = useSelector((state) => state.bookList.books);
+import { FC } from "react";
+import { useAppSelector } from "../../hooks";
+export const Books: FC = () => {
+  const state = useAppSelector((state) => state.bookList.books);
+  console.log("state", state);
   return (
     <>
       {state === undefined ? (
@@ -10,7 +12,7 @@ export const Books = () => {
       ) : (
         <div className={styles.books}>
           {state.map((book) => {
-            return <Book key={book.id} book={book} />;
+            return <Book {...book} key={book.id} />;
           })}
         </div>
       )}

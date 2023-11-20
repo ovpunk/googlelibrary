@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import noImg from "../../assets/no-img.jpg";
 import styles from "./book.module.scss";
 import { BookModal } from "../BookModal";
-export const Book = (book) => {
+import { TBook } from "../../types";
+export const Book: FC<TBook> = (props) => {
+  const {
+    title,
+    publishedDate,
+    img,
+    authors,
+    publisher,
+    previewLink,
+    description,
+  } = props;
   const [active, setActive] = useState(false);
   const [openContent, setOpenContent] = useState(false);
 
@@ -16,30 +26,32 @@ export const Book = (book) => {
   };
 
   //сокращение названия книги
-  const shortenedTitle = (title) => {
-    if (title.length > 14) {
+  const shortenedTitle = (title: string) => {
+    if (title && title.length > 14) {
       return title.slice(0, 14) + "...";
     }
     return title;
   };
-  const shortedTitle = shortenedTitle(book.book.volumeInfo.title);
+  const shortedTitle = shortenedTitle(title);
 
   //форматирование даты
-  const formatDate = (inputDate) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+  const formatDate = (inputDate: string) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
     const date = new Date(inputDate);
     return date.toLocaleDateString("en-US", options);
   };
-  const formattedDate = formatDate(book.book.volumeInfo.publishedDate);
+
+  const formattedDate = formatDate(publishedDate);
 
   return (
     <>
-      {book && (
+      {props && (
         <div className={styles.book} onClick={handleOpenModal}>
-          <img
-            src={book.book.volumeInfo?.imageLinks?.thumbnail || noImg}
-            className={styles.cover}
-          ></img>
+          <img src={img || noImg} className={styles.cover}></img>
           <h2 className={styles.title}>{shortedTitle}</h2>
         </div>
       )}
@@ -51,29 +63,17 @@ export const Book = (book) => {
       >
         <div className={styles.modal__content}>
           <div className={styles.modal__content_top}>
-            <img
-              src={book.book.volumeInfo?.imageLinks?.thumbnail || noImg}
-              className={styles.cover}
-            ></img>
+            <img src={img || noImg} className={styles.cover}></img>
             <div className={styles.modal__top_info}>
-              <h2>{book.book.volumeInfo.title}</h2>
+              <h2>{title}</h2>
+              <p>{authors ? authors.join(", ") : ""}</p>
               <p>
-                {book.book.volumeInfo.authors
-                  ? book.book.volumeInfo.authors.join(", ")
-                  : ""}
+                {publisher ? publisher : "Not known"}, {formattedDate}
               </p>
-              <p>
-                {book.book.volumeInfo.publisher
-                  ? book.book.volumeInfo.publisher
-                  : "Not known"}
-                , {formattedDate}
-              </p>
-              <a href={book.book.volumeInfo.previewLink}>More</a>
+              <a href={previewLink}>More</a>
             </div>
           </div>
-          <p className={styles.modal__description}>
-            {book.book.volumeInfo.description}
-          </p>
+          <p className={styles.modal__description}>{description}</p>
         </div>
       </BookModal>
     </>
