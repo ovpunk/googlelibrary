@@ -2,13 +2,26 @@ import { FC, useEffect, useState } from "react";
 import styles from "./header.module.scss";
 import { booksFetch } from "../../api/api";
 import { useQuery } from "@tanstack/react-query";
-import { setBookList } from "../../redux/slices/booksSlice";
+import { setBookList, setFlag } from "../../redux/slices/booksSlice";
 import { useAppDispatch } from "../../hooks";
 import { TBook } from "../../types";
 export const Header: FC = () => {
   const [value, setValue] = useState("");
-
   const dispatch = useAppDispatch();
+  type TResponce = {
+    id: string;
+    volumeInfo: {
+      imageLinks: {
+        thumbnail: string;
+      };
+      authors: string[];
+      description: string;
+      previewLink: string;
+      publisher: string;
+      publishedDate: string;
+      title: string;
+    };
+  };
   const { data, error, refetch } = useQuery({
     queryKey: ["getBooks"],
     queryFn: async () => {
@@ -17,30 +30,33 @@ export const Header: FC = () => {
         const responce = await res.json();
         setValue("");
         const books = responce.items;
-        console.log(books);
         const booksForRedux: TBook[] = [];
-        books.forEach((el: any) => {
-          const book: TBook = {
-            id: el.id,
-            title: el.volumeInfo.title,
-            img: el.volumeInfo.imageLinks?.thumbnail,
-            authors: el.volumeInfo.authors,
-            publishedDate: el.volumeInfo.publishedDate,
-            publisher: el.volumeInfo.publisher,
-            previewLink: el.volumeInfo.previewLink,
-            description: el.volumeInfo.description,
-          };
-          booksForRedux.push(book);
-        });
-        dispatch(setBookList(booksForRedux));
-
+        if (Array.isArray(books) && books.length) {
+          books.forEach((el: TResponce) => {
+            const book: TBook = {
+              id: el.id,
+              title: el.volumeInfo.title,
+              img: el.volumeInfo.imageLinks?.thumbnail,
+              authors: el.volumeInfo.authors,
+              publishedDate: el.volumeInfo.publishedDate,
+              publisher: el.volumeInfo.publisher,
+              previewLink: el.volumeInfo.previewLink,
+              description: el.volumeInfo.description,
+            };
+            booksForRedux.push(book);
+          });
+          dispatch(setBookList(booksForRedux));
+        } else {
+          dispatch(setFlag(true));
+        }
         return books;
       } else {
-        return;
+        return [];
       }
     },
     enabled: false,
   });
+
   useEffect(() => {
     const headerHeight = document.querySelector("header")!.offsetHeight;
     window.scrollBy({
@@ -53,6 +69,7 @@ export const Header: FC = () => {
   const handleFormSubmit: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     refetch();
+    dispatch(setFlag(false));
   };
 
   return (

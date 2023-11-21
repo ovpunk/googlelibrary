@@ -9,7 +9,10 @@ export const booksSlice = createSlice({
     setBookList: (state, action: PayloadAction<TBook[]>) => {
       state.books = action.payload;
     },
+    setFlag: (state, action: PayloadAction<boolean>) => {
+      state.flag = action.payload;
+    },
   },
 });
-export const { setBookList } = booksSlice.actions;
+export const { setBookList, setFlag } = booksSlice.actions;
 export const setBooksReducer = booksSlice.reducer;
