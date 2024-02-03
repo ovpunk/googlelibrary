@@ -1,8 +1,24 @@
-# React + Vite
+# Библиотека книг
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Проект представляет собой библиотеку книг, основанную на API Google Books. В приложении реализован поиск книг с информацией о каждой из них, а также предоставлена ссылка на возможность прочтения.
 
-Currently, two official plugins are available:
+## Технологии
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Vite
+- React
+- TypeScript
+- React Query
+
+### Запуск
+
+Установите npm-пакет с помощью команды:
+
+```js
+  npm i
+```
+
+Запуск Development сервера
+
+```js
+  npm run dev
+```
